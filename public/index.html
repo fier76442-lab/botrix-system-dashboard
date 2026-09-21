@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Botrix.dashboard</title>
+<style>
+:root{
+  --bg:#020817;--panel:#06152f;--panel2:#081d3d;
+  --line:#12427f;--blue:#159cff;--cyan:#27d8ff;
+  --text:#f2f8ff;--muted:#8fa9ca;--green:#20dfae
+}
+*{box-sizing:border-box}
+body{
+  margin:0;color:var(--text);font-family:Inter,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 75% 5%,rgba(20,143,255,.20),transparent 32%),
+    radial-gradient(circle at 15% 90%,rgba(22,77,180,.16),transparent 28%),
+    linear-gradient(135deg,#01040a,#03132c 55%,#020817);
+  min-height:100vh
+}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(120deg,transparent,rgba(25,160,255,.035),transparent)}
+.top{height:42px;background:#03112a;border-bottom:1px solid #0c2d59;display:flex;align-items:center;justify-content:center;font-size:13px;color:#cfe4ff}
+.top b{color:#1aa8ff}.top a{color:#31c4ff;margin-left:12px;text-decoration:none}
+.app{display:flex;min-height:calc(100vh - 42px)}
+aside{width:245px;position:fixed;top:42px;bottom:0;padding:18px 14px;background:rgba(2,9,24,.96);border-right:1px solid #0b2e5d}
+.brand{display:flex;align-items:center;gap:10px;padding:8px 10px 25px;font-weight:900;letter-spacing:2px}
+.brand img{width:48px;height:48px;object-fit:contain;border-radius:12px}
+.brand small{display:block;color:#23baff;font-size:9px;letter-spacing:4px;margin-top:3px}
+.section{color:#199fff;font-size:10px;letter-spacing:1.8px;margin:22px 11px 7px}
+nav a{display:block;color:#abc4e5;text-decoration:none;padding:11px 12px;border-radius:9px;margin:4px 0;font-size:14px}
+nav a:hover,nav a.active{color:#fff;background:linear-gradient(90deg,#063c87,#06245a);box-shadow:inset 2px 0 #28d8ff}
+main{margin-left:245px;width:calc(100% - 245px);padding:20px 30px}
+.header{height:58px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #0d2e5a;margin-bottom:22px}
+.header-links{display:flex;gap:22px}.header-links a{color:#bdd4f2;text-decoration:none;font-size:13px}
+.account{display:flex;align-items:center;gap:9px;color:#c9def8;font-size:13px}.account img{width:31px;height:31px;border-radius:50%;border:1px solid #168fff}
+.hero{border:1px solid #1154a1;border-radius:16px;padding:32px;background:linear-gradient(120deg,#041b3e,#03142d);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:420px;height:420px;border:42px solid rgba(22,156,255,.11);border-radius:50%;right:-150px;top:-170px;box-shadow:0 0 100px rgba(22,156,255,.13)}
+.kicker{color:#22baff;font-size:12px;font-weight:800;letter-spacing:2px}.hero h1{font-size:32px;margin:9px 0}.hero h1 span{color:#18a9ff}.hero p{color:#91caff;margin:0;max-width:680px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:17px 0}.card{background:linear-gradient(145deg,#061a39,#041228);border:1px solid #104681;border-radius:14px;padding:19px}.label{color:#8fa9ca;font-size:11px}.value{font-size:27px;font-weight:800;margin:8px 0}.online{color:var(--green);font-size:11px}
+.content{display:grid;grid-template-columns:1.4fr 1fr;gap:17px}.card h2{font-size:16px;margin:0 0 5px}.sub{font-size:11px;color:var(--muted)}
+.guild{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid #0b2d59}.guild:last-child{border:0}.guild img{width:38px;height:38px;border-radius:50%;border:1px solid #145a9d;background:#061b38}.guild .grow{flex:1}.guild .name{font-size:13px;font-weight:700}.guild .members{font-size:10px;color:var(--muted);margin-top:3px}.badge{font-size:10px;color:#1be0b0}
+.status{display:inline-flex;align-items:center;gap:7px;color:#1ee2b0;font-size:11px}.dot{width:7px;height:7px;border-radius:50%;background:#20dfae;box-shadow:0 0 12px #20dfae}
+.empty{padding:35px 10px;text-align:center;color:var(--muted)}
+@media(max-width:950px){aside{width:190px}.cards{grid-template-columns:repeat(2,1fr)}main{margin-left:190px;width:calc(100% - 190px)}.content{grid-template-columns:1fr}.header-links{display:none}}
+@media(max-width:600px){aside{display:none}main{margin:0;width:100%;padding:14px}.cards{grid-template-columns:1fr}.hero h1{font-size:25px}}
+</style>
+</head>
+<body>
+<div class="top">📢 <b>Updated</b> — Botrix System dashboard is online. <a href="#">Learn more →</a></div>
+<div class="app">
+<aside>
+  <div class="brand">
+    <img src="https://cdn.discordapp.com/attachments/1550495812499275846/1550576681960480788/18.09.2026_14.42.46_REC.png" alt="Botrix">
+    <div>BOTRIX<small>SYSTEM</small></div>
+  </div>
+  <nav>
+    <a class="active" href="#">⌂ Home</a>
+    <a href="#">▣ Servers</a>
+    <a href="#">⚑ Announcements</a>
+    <a href="#">◇ Premium</a>
+    <div class="section">PLAYS</div>
+    <a href="#">🎁 Giveaways</a><a href="#">🎮 Games</a><a href="#">📊 Analytics</a>
+    <div class="section">RESOURCES</div>
+    <a href="#">▤ Docs</a><a href="#">⌁ Changelog</a><a href="#">♟ Team</a><a href="#">● Status</a><a href="#">♧ Support</a>
+  </nav>
+</aside>
+
+<main>
+  <div class="header">
+    <div class="header-links">
+      <a href="#">Home</a><a href="#">Servers</a><a href="#">Announcements</a><a href="#">Premium</a>
+      <a href="#">Plays ▾</a><a href="#">Resources ▾</a>
+    </div>
+    <div class="account">🪙 0 <img id="botAvatar" alt=""> Botrix System</div>
+  </div>
+
+  <section class="hero">
+    <div class="kicker">◉ BOTRIX SYSTEM · LIVE</div>
+    <h1>Welcome to <span>Botrix.dashboard</span></h1>
+    <p>Real-time information from your Botrix Discord bot. Server counts and server names come directly from Discord.</p>
+    <div class="status" style="margin-top:16px"><span class="dot"></span><span id="statusText">Connecting to Botrix...</span></div>
+  </section>
+
+  <section class="cards">
+    <div class="card"><div class="label">▣ SERVERS</div><div class="value" id="servers">—</div><div class="online">● Live from Discord</div></div>
+    <div class="card"><div class="label">👥 MEMBERS</div><div class="value" id="members">—</div><div class="online">● Current total</div></div>
+    <div class="card"><div class="label">💬 MESSAGES</div><div class="value" id="messages">—</div><div class="online">● Tracked by Botrix</div></div>
+    <div class="card"><div class="label">⚡ COMMANDS</div><div class="value" id="commands">—</div><div class="online">● Tracked by Botrix</div></div>
+  </section>
+
+  <section class="content">
+    <div class="card">
+      <h2>🖥️ My Servers</h2>
+      <div class="sub" id="serverSub">Servers where Botrix System is installed</div>
+      <div id="guildList"><div class="empty">Loading real Discord servers...</div></div>
+    </div>
+    <div class="card">
+      <h2>🤖 Botrix System</h2>
+      <div class="sub">Live bot connection</div>
+      <div style="margin-top:22px">
+        <div class="label">STATUS</div><div class="value" style="font-size:20px" id="botStatus">—</div>
+        <div class="label" style="margin-top:18px">DISCORD PING</div><div class="value" style="font-size:20px"><span id="ping">—</span> ms</div>
+        <div class="label" style="margin-top:18px">UPTIME</div><div class="value" style="font-size:20px" id="uptime">—</div>
+      </div>
+    </div>
+  </section>
+</main>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+function formatNumber(n){return Number(n||0).toLocaleString();}
+function formatUptime(sec){
+  sec=Number(sec||0); const d=Math.floor(sec/86400); sec%=86400;
+  const h=Math.floor(sec/3600); sec%=3600; const m=Math.floor(sec/60);
+  return `${d?d+"d ":""}${h}h ${m}m`;
+}
+function render(data){
+  $("servers").textContent=formatNumber(data.totals.servers);
+  $("members").textContent=formatNumber(data.totals.members);
+  $("messages").textContent=formatNumber(data.totals.messages);
+  $("commands").textContent=formatNumber(data.totals.commands);
+  $("ping").textContent=data.bot.ping >= 0 ? data.bot.ping : "—";
+  $("uptime").textContent=formatUptime(data.uptimeSeconds);
+  $("botStatus").textContent=data.bot.online ? "Online" : "Offline";
+  $("statusText").textContent=data.bot.online ? "Botrix System is online" : "Botrix System is offline";
+  if(data.bot.avatar) $("botAvatar").src=data.bot.avatar;
+
+  $("serverSub").textContent=`${formatNumber(data.guilds.length)} real Discord servers where Botrix System is installed`;
+
+  const list=$("guildList");
+  if(!data.guilds.length){list.innerHTML='<div class="empty">Botrix is not in any server yet.</div>';return;}
+  list.innerHTML=data.guilds.map((g,i)=>`
+    <div class="guild">
+      <span style="width:22px;color:#7ea5d5">${i+1}</span>
+      <img src="${g.icon || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2238%22 height=%2238%22><rect width=%2238%22 height=%2238%22 rx=%2219%22 fill=%22%23051b3d%22/></svg>'}" alt="">
+      <div class="grow"><div class="name">${escapeHtml(g.name)}</div><div class="members">${formatNumber(g.members)} members</div></div>
+      <div class="badge">● Botrix</div>
+    </div>`).join("");
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+async function load(){
+  try{
+    const res=await fetch("/api/dashboard",{cache:"no-store"});
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.message||"Dashboard unavailable");
+    render(data);
+  }catch(e){
+    $("statusText").textContent=e.message;
+    $("botStatus").textContent="Waiting";
+  }
+}
+load();
+setInterval(load,10000);
+</script>
+</body>
+</html>

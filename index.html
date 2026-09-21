@@ -1,0 +1,5072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Botrix System</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #07070a;
+      --bg2: #0b0b10;
+      --card: #101017;
+      --card2: #14141c;
+      --border: rgba(255,255,255,.08);
+      --text: #f5f5f7;
+      --muted: #92929d;
+      --accent: #7c5cff;
+      --accent2: #9b7cff;
+      --green: #35d07f;
+      --red: #ff5c6c;
+      --yellow: #ffc857;
+      --blue: #4da6ff;
+      --sidebar: 250px;
+
+      --bot-logo:
+        url("https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&");
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 70% 0%, rgba(124,92,255,.12), transparent 30%),
+        radial-gradient(circle at 20% 20%, rgba(77,166,255,.05), transparent 25%),
+        var(--bg);
+
+      color: var(--text);
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      min-height: 100vh;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ==================================================
+       BOTRIX LOGO
+    ================================================== */
+
+    .botrix-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      object-fit: cover;
+      display: block;
+      flex-shrink: 0;
+      box-shadow: 0 10px 30px rgba(124,92,255,.25);
+    }
+
+    .botrix-logo-small {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      object-fit: cover;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .botrix-logo-medium {
+      width: 60px;
+      height: 60px;
+      border-radius: 17px;
+      object-fit: cover;
+      display: block;
+      box-shadow: 0 12px 35px rgba(124,92,255,.25);
+    }
+
+    .botrix-logo-large {
+      width: 90px;
+      height: 90px;
+      border-radius: 24px;
+      object-fit: cover;
+      display: block;
+      box-shadow: 0 18px 50px rgba(124,92,255,.30);
+    }
+
+    .botrix-logo-loading {
+      width: 82px;
+      height: 82px;
+      border-radius: 23px;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 15px;
+      box-shadow: 0 15px 45px rgba(124,92,255,.28);
+      animation: botrixPulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes botrixPulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.06);
+        opacity: .82;
+      }
+    }
+
+    .botrix-identity {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .botrix-identity-text h3 {
+      font-size: 15px;
+      margin-bottom: 3px;
+    }
+
+    .botrix-identity-text p {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    /* ==================================================
+       APP
+    ================================================== */
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ==================================================
+       SIDEBAR
+    ================================================== */
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+
+      width: var(--sidebar);
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(17,17,24,.98),
+          rgba(8,8,12,.98)
+        );
+
+      border-right: 1px solid var(--border);
+
+      display: flex;
+      flex-direction: column;
+
+      z-index: 100;
+    }
+
+    .brand {
+      height: 76px;
+
+      display: flex;
+      align-items: center;
+
+      gap: 12px;
+
+      padding: 0 20px;
+
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+
+      border-radius: 12px;
+
+      overflow: hidden;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #111118;
+
+      box-shadow:
+        0 10px 30px rgba(124,92,255,.25);
+
+      flex-shrink: 0;
+    }
+
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand-name {
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -.3px;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .nav {
+      flex: 1;
+      padding: 16px 12px;
+
+      overflow-y: auto;
+    }
+
+    .nav-title {
+      color: #666672;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+
+      padding: 12px 10px 8px;
+      text-transform: uppercase;
+    }
+
+    .nav-btn {
+      width: 100%;
+
+      border: 0;
+      background: transparent;
+
+      color: #9999a4;
+
+      display: flex;
+      align-items: center;
+
+      gap: 12px;
+
+      padding: 11px 12px;
+
+      border-radius: 10px;
+
+      margin-bottom: 3px;
+
+      text-align: left;
+
+      transition: .18s ease;
+    }
+
+    .nav-btn:hover {
+      color: white;
+      background: rgba(255,255,255,.045);
+    }
+
+    .nav-btn.active {
+      color: white;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(124,92,255,.18),
+          rgba(124,92,255,.06)
+        );
+
+      box-shadow:
+        inset 2px 0 0 var(--accent);
+    }
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+      font-size: 15px;
+    }
+
+    .sidebar-bottom {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .online-mini {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      padding: 10px 12px;
+
+      background: rgba(53,208,127,.06);
+
+      border: 1px solid rgba(53,208,127,.12);
+
+      border-radius: 10px;
+
+      color: #b8c2bd;
+
+      font-size: 12px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+
+      box-shadow:
+        0 0 12px rgba(53,208,127,.6);
+    }
+
+    /* ==================================================
+       MAIN
+    ================================================== */
+
+    .main {
+      margin-left: var(--sidebar);
+      width: calc(100% - var(--sidebar));
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 76px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 0 30px;
+
+      border-bottom: 1px solid var(--border);
+
+      background: rgba(7,7,10,.78);
+
+      backdrop-filter: blur(18px);
+
+      position: sticky;
+      top: 0;
+
+      z-index: 50;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .page-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-box {
+      display: none;
+      align-items: center;
+      gap: 9px;
+
+      padding: 6px 9px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: rgba(255,255,255,.025);
+    }
+
+    .user-box.show {
+      display: flex;
+    }
+
+    .user-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .user-name {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .page {
+      display: none;
+      padding: 30px;
+      max-width: 1450px;
+      margin: auto;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* ==================================================
+       BUTTONS
+    ================================================== */
+
+    .btn {
+      border: 1px solid var(--border);
+
+      background: rgba(255,255,255,.04);
+
+      color: white;
+
+      border-radius: 10px;
+
+      padding: 10px 15px;
+
+      font-size: 13px;
+      font-weight: 700;
+
+      transition: .18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.08);
+    }
+
+    .btn-primary {
+      border-color: transparent;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--accent),
+          #6044df
+        );
+
+      box-shadow:
+        0 8px 25px rgba(124,92,255,.22);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-green {
+      background: rgba(53,208,127,.1);
+      border-color: rgba(53,208,127,.2);
+      color: #72e8a5;
+    }
+
+    .btn-discord {
+      background: #5865f2;
+      border-color: #5865f2;
+    }
+
+    .btn-danger {
+      background: rgba(255,92,108,.08);
+      border-color: rgba(255,92,108,.2);
+      color: #ff8490;
+    }
+
+    /* ==================================================
+       HOME
+    ================================================== */
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+
+      border: 1px solid var(--border);
+      border-radius: 20px;
+
+      padding: 50px;
+
+      background:
+        radial-gradient(
+          circle at 85% 20%,
+          rgba(124,92,255,.2),
+          transparent 35%
+        ),
+        linear-gradient(
+          135deg,
+          rgba(124,92,255,.07),
+          rgba(255,255,255,.015)
+        );
+    }
+
+    .hero-logo {
+      width: 90px;
+      height: 90px;
+      border-radius: 24px;
+      object-fit: cover;
+      display: block;
+      margin-bottom: 18px;
+      box-shadow: 0 18px 50px rgba(124,92,255,.3);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+
+      padding: 6px 10px;
+
+      border-radius: 999px;
+
+      border: 1px solid rgba(124,92,255,.25);
+
+      background: rgba(124,92,255,.08);
+
+      color: #b9a9ff;
+
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      font-size: clamp(34px, 5vw, 58px);
+
+      line-height: 1.02;
+
+      letter-spacing: -2.5px;
+
+      max-width: 800px;
+
+      margin: 18px 0 15px;
+    }
+
+    .hero h1 span {
+      color: var(--accent2);
+    }
+
+    .hero p {
+      color: #aaaab5;
+
+      max-width: 650px;
+
+      line-height: 1.7;
+
+      font-size: 14px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+
+      gap: 10px;
+
+      margin-top: 27px;
+    }
+
+    .quick-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0,1fr));
+
+      gap: 15px;
+
+      margin-top: 18px;
+    }
+
+    .quick-card {
+      padding: 20px;
+
+      border-radius: 15px;
+
+      border: 1px solid var(--border);
+
+      background: var(--card);
+
+      transition: .2s;
+    }
+
+    .quick-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(124,92,255,.25);
+    }
+
+    .quick-icon {
+      width: 38px;
+      height: 38px;
+
+      border-radius: 10px;
+
+      background: rgba(124,92,255,.1);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      margin-bottom: 13px;
+
+      overflow: hidden;
+    }
+
+    .quick-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .quick-card h3 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .quick-card p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ==================================================
+       SECTION
+    ================================================== */
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      font-size: 20px;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    /* ==================================================
+       STATS
+    ================================================== */
+
+    .stats-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, minmax(0,1fr));
+
+      gap: 14px;
+
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      padding: 20px;
+
+      border-radius: 15px;
+
+      border: 1px solid var(--border);
+
+      background: var(--card);
+    }
+
+    .stat-card-botrix {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .stat-card-botrix img {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      object-fit: cover;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 9px;
+    }
+
+    .stat-value {
+      font-size: 27px;
+      font-weight: 850;
+    }
+
+    .stat-extra {
+      color: var(--green);
+      font-size: 11px;
+      margin-top: 7px;
+    }
+
+    /* ==================================================
+       SERVER
+    ================================================== */
+
+    .server-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(auto-fill, minmax(260px,1fr));
+
+      gap: 14px;
+    }
+
+    .server-card {
+      border: 1px solid var(--border);
+
+      background: var(--card);
+
+      border-radius: 15px;
+
+      padding: 17px;
+
+      transition: .2s;
+    }
+
+    .server-card:hover {
+      border-color: rgba(124,92,255,.3);
+      transform: translateY(-2px);
+    }
+
+    .server-card-brand {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+    }
+
+    .server-card-brand img {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      object-fit: cover;
+      opacity: .85;
+    }
+
+    .server-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .server-icon {
+      width: 48px;
+      height: 48px;
+
+      border-radius: 13px;
+
+      object-fit: cover;
+
+      background: #1c1c25;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-weight: 800;
+    }
+
+    .server-name {
+      font-weight: 750;
+      font-size: 14px;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .server-members {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .server-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-top: 17px;
+    }
+
+    .rank {
+      color: var(--accent2);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .empty {
+      padding: 50px 20px;
+
+      text-align: center;
+
+      border: 1px dashed rgba(255,255,255,.1);
+
+      border-radius: 15px;
+
+      color: var(--muted);
+    }
+
+    /* ==================================================
+       COMMANDS
+    ================================================== */
+
+    .command-groups {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0,1fr));
+
+      gap: 15px;
+    }
+
+    .command-card {
+      border: 1px solid var(--border);
+
+      background: var(--card);
+
+      border-radius: 15px;
+
+      padding: 20px;
+    }
+
+    .command-card-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .command-card-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      object-fit: cover;
+    }
+
+    .command-card h3 {
+      font-size: 14px;
+
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .command-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .command {
+      padding: 7px 10px;
+
+      border-radius: 8px;
+
+      background: rgba(124,92,255,.07);
+
+      border: 1px solid rgba(124,92,255,.13);
+
+      color: #bfb5ff;
+
+      font-family: monospace;
+
+      font-size: 11px;
+    }
+
+    /* ==================================================
+       STATUS
+    ================================================== */
+
+    .status-card {
+      border: 1px solid var(--border);
+
+      background:
+        radial-gradient(
+          circle at 80% 10%,
+          rgba(53,208,127,.08),
+          transparent 30%
+        ),
+        var(--card);
+
+      border-radius: 18px;
+
+      padding: 30px;
+    }
+
+    .status-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 25px;
+    }
+
+    .status-brand img {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      object-fit: cover;
+      box-shadow: 0 10px 30px rgba(124,92,255,.22);
+    }
+
+    .status-brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 3px;
+    }
+
+    .status-main {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      margin-bottom: 30px;
+    }
+
+    .status-circle {
+      width: 60px;
+      height: 60px;
+
+      border-radius: 50%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: rgba(53,208,127,.1);
+
+      border: 1px solid rgba(53,208,127,.2);
+    }
+
+    .status-circle .dot {
+      width: 16px;
+      height: 16px;
+    }
+
+    .status-title {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .status-desc {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .status-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, minmax(0,1fr));
+
+      gap: 12px;
+    }
+
+    .status-item {
+      padding: 16px;
+
+      border-radius: 12px;
+
+      background: rgba(255,255,255,.025);
+
+      border: 1px solid var(--border);
+    }
+
+    .status-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      margin-bottom: 7px;
+    }
+
+    .status-item strong {
+      font-size: 17px;
+    }
+
+    /* ==================================================
+       UPDATES
+    ================================================== */
+
+    .updates {
+      display: grid;
+      gap: 12px;
+    }
+
+    .update-card {
+      border: 1px solid var(--border);
+
+      background: var(--card);
+
+      border-radius: 15px;
+
+      padding: 20px;
+
+      display: flex;
+      gap: 15px;
+    }
+
+    .update-icon {
+      min-width: 48px;
+      height: 48px;
+
+      border-radius: 13px;
+
+      background: rgba(124,92,255,.1);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      overflow: hidden;
+    }
+
+    .update-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .update-card h3 {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .update-card p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .update-date {
+      color: var(--accent2);
+      font-size: 10px;
+      margin-top: 7px;
+    }
+
+    /* ==================================================
+       GIVEAWAYS
+    ================================================== */
+
+    .giveaway-stats {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3,1fr);
+
+      gap: 14px;
+
+      margin-bottom: 20px;
+    }
+
+    .giveaway-stat {
+      padding: 20px;
+
+      background: var(--card);
+
+      border: 1px solid var(--border);
+
+      border-radius: 15px;
+    }
+
+    .giveaway-stat-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .giveaway-stat-brand img {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      object-fit: cover;
+    }
+
+    .giveaway-stat span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .giveaway-stat strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 28px;
+    }
+
+    .giveaway-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .giveaway {
+      border: 1px solid var(--border);
+
+      background: var(--card);
+
+      border-radius: 15px;
+
+      padding: 20px;
+    }
+
+    .giveaway-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .giveaway-title {
+      font-weight: 750;
+      font-size: 14px;
+    }
+
+    .badge {
+      padding: 5px 9px;
+
+      border-radius: 999px;
+
+      font-size: 10px;
+
+      background: rgba(255,92,108,.08);
+
+      border: 1px solid rgba(255,92,108,.15);
+
+      color: #ff909a;
+
+      white-space: nowrap;
+    }
+
+    .giveaway-meta {
+      display: flex;
+      gap: 18px;
+
+      margin-top: 12px;
+
+      color: var(--muted);
+
+      font-size: 11px;
+    }
+
+    /* ==================================================
+       PREMIUM
+    ================================================== */
+
+    .premium-hero {
+      text-align: center;
+
+      padding: 30px 10px 35px;
+    }
+
+    .premium-logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      object-fit: cover;
+      margin: 0 auto 15px;
+      box-shadow: 0 15px 40px rgba(124,92,255,.25);
+    }
+
+    .premium-hero h1 {
+      font-size: 38px;
+      letter-spacing: -1.5px;
+    }
+
+    .premium-hero p {
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 650px;
+      margin: 10px auto 0;
+      line-height: 1.6;
+    }
+
+    .plans {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0,1fr));
+
+      gap: 15px;
+    }
+
+    .plan {
+      position: relative;
+
+      padding: 25px;
+
+      border-radius: 18px;
+
+      border: 1px solid var(--border);
+
+      background: var(--card);
+    }
+
+    .plan.featured {
+      border-color: rgba(124,92,255,.45);
+
+      box-shadow:
+        0 15px 45px rgba(124,92,255,.09);
+    }
+
+    .plan-tag {
+      position: absolute;
+
+      top: 15px;
+      right: 15px;
+
+      font-size: 9px;
+
+      padding: 5px 8px;
+
+      border-radius: 999px;
+
+      background: rgba(124,92,255,.12);
+
+      color: #bcaeff;
+    }
+
+    .plan-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      object-fit: cover;
+      margin-bottom: 12px;
+    }
+
+    .plan-name {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .plan-price {
+      font-size: 29px;
+      font-weight: 900;
+
+      margin: 15px 0 5px;
+    }
+
+    .plan-price small {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .plan-desc {
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 18px;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .feature-list li {
+      color: #b7b7c0;
+      font-size: 11px;
+    }
+
+    .feature-list li::before {
+      content: "✓";
+      color: var(--green);
+      font-weight: 900;
+      margin-right: 8px;
+    }
+
+    .account-card {
+      margin-top: 18px;
+
+      padding: 20px;
+
+      border-radius: 15px;
+
+      border: 1px solid var(--border);
+
+      background: var(--card);
+    }
+
+    .account-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .account-header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      object-fit: cover;
+    }
+
+    .account-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3,1fr);
+
+      gap: 12px;
+
+      margin-top: 15px;
+    }
+
+    .account-stat {
+      padding: 15px;
+
+      border-radius: 11px;
+
+      background: rgba(255,255,255,.025);
+    }
+
+    .account-stat span {
+      display: block;
+
+      color: var(--muted);
+
+      font-size: 10px;
+
+      margin-bottom: 5px;
+    }
+
+    .account-stat strong {
+      font-size: 15px;
+    }
+
+    /* ==================================================
+       DOCS
+    ================================================== */
+
+    .docs-layout {
+      display: grid;
+
+      grid-template-columns: 230px 1fr;
+
+      gap: 20px;
+    }
+
+    .docs-sidebar {
+      border: 1px solid var(--border);
+
+      background: var(--card);
+
+      border-radius: 15px;
+
+      padding: 12px;
+
+      height: fit-content;
+
+      position: sticky;
+      top: 95px;
+    }
+
+    .docs-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      margin-bottom: 7px;
+    }
+
+    .docs-brand img {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .docs-brand strong {
+      font-size: 12px;
+    }
+
+    .docs-brand span {
+      display: block;
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 2px;
+    }
+
+    .docs-search {
+      width: 100%;
+
+      padding: 10px 11px;
+
+      border-radius: 9px;
+
+      border: 1px solid var(--border);
+
+      outline: none;
+
+      background: rgba(255,255,255,.035);
+
+      color: white;
+
+      font-size: 11px;
+
+      margin-bottom: 12px;
+    }
+
+    .docs-nav-title {
+      color: #666672;
+
+      font-size: 9px;
+
+      font-weight: 800;
+
+      letter-spacing: 1px;
+
+      padding: 9px 8px 6px;
+    }
+
+    .docs-nav-btn {
+      width: 100%;
+
+      background: transparent;
+
+      color: #9999a5;
+
+      border: 0;
+
+      padding: 9px;
+
+      border-radius: 8px;
+
+      text-align: left;
+
+      font-size: 11px;
+    }
+
+    .docs-nav-btn:hover,
+    .docs-nav-btn.active {
+      background: rgba(124,92,255,.09);
+      color: white;
+    }
+
+    .docs-content {
+      min-width: 0;
+    }
+
+    .docs-home {
+      border: 1px solid var(--border);
+
+      background: var(--card);
+
+      border-radius: 18px;
+
+      padding: 30px;
+    }
+
+    .docs-home-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .docs-home-brand img {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      object-fit: cover;
+    }
+
+    .docs-home-brand p {
+      margin: 0;
+    }
+
+    .docs-home h1 {
+      font-size: 30px;
+      margin-bottom: 9px;
+    }
+
+    .docs-home > p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 13px;
+      max-width: 760px;
+    }
+
+    .docs-cards {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2,1fr);
+
+      gap: 12px;
+
+      margin-top: 25px;
+    }
+
+    .docs-card {
+      border: 1px solid var(--border);
+
+      background: rgba(255,255,255,.02);
+
+      border-radius: 13px;
+
+      padding: 18px;
+
+      cursor: pointer;
+    }
+
+    .docs-card:hover {
+      border-color: rgba(124,92,255,.3);
+    }
+
+    .docs-card-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .docs-card h3 {
+      font-size: 13px;
+      margin: 8px 0 5px;
+    }
+
+    .docs-card p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .article {
+      border: 1px solid var(--border);
+
+      background: var(--card);
+
+      border-radius: 18px;
+
+      padding: 30px;
+
+      line-height: 1.7;
+    }
+
+    .article h1 {
+      font-size: 29px;
+      margin-bottom: 8px;
+    }
+
+    .article h2 {
+      font-size: 18px;
+      margin: 28px 0 10px;
+    }
+
+    .article h3 {
+      font-size: 14px;
+      margin: 20px 0 8px;
+    }
+
+    .article p {
+      color: #a9a9b4;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .article ul {
+      padding-left: 20px;
+      color: #a9a9b4;
+      font-size: 13px;
+    }
+
+    .article li {
+      margin-bottom: 5px;
+    }
+
+    .code {
+      background: #08080c;
+
+      border: 1px solid var(--border);
+
+      border-radius: 10px;
+
+      padding: 14px;
+
+      font-family: monospace;
+
+      color: #c9c2ff;
+
+      font-size: 11px;
+
+      overflow-x: auto;
+
+      margin: 12px 0;
+    }
+
+    /* ==================================================
+       LOGIN
+    ================================================== */
+
+    .login-card {
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 40px;
+      text-align: center;
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 20px;
+    }
+
+    .login-card img {
+      width: 90px;
+      height: 90px;
+      border-radius: 24px;
+      object-fit: cover;
+      margin: 0 auto 18px;
+      box-shadow: 0 18px 50px rgba(124,92,255,.3);
+    }
+
+    .login-card h2 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .login-card p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    /* ==================================================
+       TOAST
+    ================================================== */
+
+    .toast {
+      position: fixed;
+
+      bottom: 20px;
+      right: 20px;
+
+      padding: 13px 16px;
+
+      border-radius: 11px;
+
+      background: #15151c;
+
+      border: 1px solid var(--border);
+
+      box-shadow:
+        0 15px 40px rgba(0,0,0,.35);
+
+      color: white;
+
+      font-size: 12px;
+
+      transform: translateY(120px);
+
+      opacity: 0;
+
+      transition: .25s;
+
+      z-index: 999;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ==================================================
+       LOADING
+    ================================================== */
+
+    .loading {
+      padding: 35px 30px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .loading-logo {
+      width: 65px;
+      height: 65px;
+      border-radius: 18px;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 13px;
+      box-shadow: 0 12px 35px rgba(124,92,255,.22);
+      animation: botrixPulse 1.8s ease-in-out infinite;
+    }
+
+    .spinner {
+      width: 22px;
+      height: 22px;
+
+      border: 2px solid rgba(255,255,255,.1);
+      border-top-color: var(--accent);
+
+      border-radius: 50%;
+
+      animation: spin .8s linear infinite;
+
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ==================================================
+       MOBILE
+    ================================================== */
+
+    @media (max-width: 1050px) {
+      .stats-grid,
+      .status-grid {
+        grid-template-columns:
+          repeat(2,1fr);
+      }
+
+      .plans {
+        grid-template-columns: 1fr;
+      }
+
+      .command-groups {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 800px) {
+      :root {
+        --sidebar: 70px;
+      }
+
+      .brand {
+        justify-content: center;
+        padding: 0;
+      }
+
+      .brand-text,
+      .nav-title,
+      .nav-btn span:not(.nav-icon),
+      .online-mini span {
+        display: none;
+      }
+
+      .nav-btn {
+        justify-content: center;
+      }
+
+      .main {
+        width: calc(100% - 70px);
+      }
+
+      .topbar {
+        padding: 0 15px;
+      }
+
+      .page {
+        padding: 18px;
+      }
+
+      .hero {
+        padding: 28px;
+      }
+
+      .quick-grid,
+      .giveaway-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .docs-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .docs-sidebar {
+        position: static;
+      }
+
+      .docs-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .account-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 550px) {
+      .stats-grid,
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .topbar .page-subtitle {
+        display: none;
+      }
+
+      .user-name {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- ==================================================
+       SIDEBAR
+  ================================================== -->
+
+  <aside class="sidebar">
+
+    <div class="brand">
+
+      <div class="brand-logo">
+        <img
+          src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+          alt="Botrix"
+        >
+      </div>
+
+      <div class="brand-text">
+        <div class="brand-name">Botrix System</div>
+        <div class="brand-sub">Dashboard</div>
+      </div>
+
+    </div>
+
+    <nav class="nav">
+
+      <div class="nav-title">Dashboard</div>
+
+      <button class="nav-btn active" data-page="home">
+        <span class="nav-icon">⌂</span>
+        <span>Home</span>
+      </button>
+
+      <button class="nav-btn" data-page="servers">
+        <span class="nav-icon">◈</span>
+        <span>Servers</span>
+      </button>
+
+      <button class="nav-btn" data-page="bot-info">
+        <span class="nav-icon">🤖</span>
+        <span>Bot Info</span>
+      </button>
+
+      <button class="nav-btn" data-page="status">
+        <span class="nav-icon">●</span>
+        <span>Status</span>
+      </button>
+
+      <div class="nav-title">Botrix</div>
+
+      <button class="nav-btn" data-page="updates">
+        <span class="nav-icon">✦</span>
+        <span>Bot Updates</span>
+      </button>
+
+      <button class="nav-btn" data-page="giveaways">
+        <span class="nav-icon">🎁</span>
+        <span>Giveaways</span>
+      </button>
+
+      <button class="nav-btn" data-page="premium">
+        <span class="nav-icon">◆</span>
+        <span>Premium</span>
+      </button>
+
+      <div class="nav-title">Help</div>
+
+      <button class="nav-btn" data-page="docs">
+        <span class="nav-icon">▤</span>
+        <span>Docs</span>
+      </button>
+
+      <button class="nav-btn" id="ticketBtn">
+        <span class="nav-icon">🎫</span>
+        <span>Open Ticket</span>
+      </button>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+      <div class="online-mini">
+        <span class="dot"></span>
+        <span id="sidebarStatus">Checking bot...</span>
+      </div>
+
+    </div>
+
+  </aside>
+
+
+  <!-- ==================================================
+       MAIN
+  ================================================== -->
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div>
+        <div class="page-title" id="pageTitle">
+          Home
+        </div>
+
+        <div class="page-subtitle" id="pageSubtitle">
+          Welcome to Botrix System
+        </div>
+      </div>
+
+      <div class="top-actions">
+
+        <button
+          class="btn btn-primary"
+          id="topLoginBtn"
+        >
+          Login with Discord
+        </button>
+
+        <div class="user-box" id="userBox">
+
+          <img
+            class="user-avatar"
+            id="userAvatar"
+            src=""
+            alt=""
+          >
+
+          <div class="user-name" id="userName">
+            User
+          </div>
+
+          <button
+            class="btn"
+            id="logoutBtn"
+          >
+            Logout
+          </button>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- ==================================================
+         HOME
+    ================================================== -->
+
+    <section
+      class="page active"
+      id="page-home"
+    >
+
+      <div class="hero">
+
+        <img
+          class="hero-logo"
+          src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+          alt="Botrix System"
+        >
+
+        <div class="hero-badge">
+          <span class="dot"></span>
+          BOTRIX SYSTEM
+        </div>
+
+        <h1>
+          Manage your Discord
+          <span>better.</span>
+        </h1>
+
+        <p>
+          Botrix System is your all-in-one Discord bot
+          dashboard for servers, moderation, community
+          tools, giveaways, premium features and more.
+        </p>
+
+        <div class="hero-buttons">
+
+          <button
+            class="btn btn-discord"
+            id="loginBtn"
+          >
+            Login with Discord
+          </button>
+
+          <button
+            class="btn btn-primary"
+            id="joinBtn"
+          >
+            Join Discord Server
+          </button>
+
+          <button
+            class="btn"
+            id="inviteBtn"
+          >
+            Add Bot to Server
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="quick-grid">
+
+        <div class="quick-card">
+
+          <div class="quick-icon">
+            <img
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+          </div>
+
+          <h3>Servers</h3>
+
+          <p>
+            View the Discord servers where Botrix
+            is currently installed.
+          </p>
+
+        </div>
+
+
+        <div class="quick-card">
+
+          <div class="quick-icon">
+            <img
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+          </div>
+
+          <h3>Powerful Bot</h3>
+
+          <p>
+            Moderation, economy, community commands,
+            tickets, giveaways and more.
+          </p>
+
+        </div>
+
+
+        <div class="quick-card">
+
+          <div class="quick-icon">
+            <img
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+          </div>
+
+          <h3>Live Status</h3>
+
+          <p>
+            Monitor Botrix uptime, servers,
+            members and connection status.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div style="margin-top:28px">
+
+        <div class="section-head">
+
+          <div>
+            <h2>Live Overview</h2>
+            <p>Current Botrix statistics</p>
+          </div>
+
+        </div>
+
+        <div class="stats-grid">
+
+          <div class="stat-card">
+
+            <div class="stat-card-botrix">
+              <img
+                src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+                alt="Botrix"
+              >
+              <div class="stat-label">Servers</div>
+            </div>
+
+            <div
+              class="stat-value"
+              id="homeServers"
+            >
+              0
+            </div>
+
+            <div class="stat-extra">
+              ● Bot connected
+            </div>
+
+          </div>
+
+          <div class="stat-card">
+
+            <div class="stat-card-botrix">
+              <img
+                src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+                alt="Botrix"
+              >
+              <div class="stat-label">Members</div>
+            </div>
+
+            <div
+              class="stat-value"
+              id="homeMembers"
+            >
+              0
+            </div>
+
+            <div class="stat-extra">
+              Across all servers
+            </div>
+
+          </div>
+
+          <div class="stat-card">
+
+            <div class="stat-card-botrix">
+              <img
+                src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+                alt="Botrix"
+              >
+              <div class="stat-label">Messages</div>
+            </div>
+
+            <div
+              class="stat-value"
+              id="homeMessages"
+            >
+              0
+            </div>
+
+            <div class="stat-extra">
+              Live counter
+            </div>
+
+          </div>
+
+          <div class="stat-card">
+
+            <div class="stat-card-botrix">
+              <img
+                src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+                alt="Botrix"
+              >
+              <div class="stat-label">Commands</div>
+            </div>
+
+            <div
+              class="stat-value"
+              id="homeCommands"
+            >
+              0
+            </div>
+
+            <div class="stat-extra">
+              Processed
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         SERVERS
+    ================================================== -->
+
+    <section
+      class="page"
+      id="page-servers"
+    >
+
+      <div class="section-head">
+
+        <div>
+          <h2>Servers</h2>
+          <p>
+            Servers where Botrix is currently installed
+          </p>
+        </div>
+
+        <button
+          class="btn"
+          id="refreshServers"
+        >
+          ↻ Refresh
+        </button>
+
+      </div>
+
+      <div
+        class="stats-grid"
+        style="grid-template-columns:repeat(2,1fr)"
+      >
+
+        <div class="stat-card">
+
+          <div class="stat-card-botrix">
+            <img
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+            <div class="stat-label">Total Servers</div>
+          </div>
+
+          <div
+            class="stat-value"
+            id="serverTotal"
+          >
+            0
+          </div>
+
+        </div>
+
+        <div class="stat-card">
+
+          <div class="stat-card-botrix">
+            <img
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+            <div class="stat-label">Total Members</div>
+          </div>
+
+          <div
+            class="stat-value"
+            id="serverMembers"
+          >
+            0
+          </div>
+
+        </div>
+
+      </div>
+
+      <div
+        id="serversContainer"
+        class="server-grid"
+      >
+
+        <div class="loading">
+
+          <img
+            class="loading-logo"
+            src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+            alt="Botrix"
+          >
+
+          <div class="spinner"></div>
+
+          Loading servers...
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         BOT INFO
+    ================================================== -->
+
+    <section
+      class="page"
+      id="page-bot-info"
+    >
+
+      <div class="section-head">
+
+        <div class="botrix-identity">
+
+          <img
+            class="botrix-logo-small"
+            src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+            alt="Botrix"
+          >
+
+          <div class="botrix-identity-text">
+            <h3>Botrix System</h3>
+            <p>Commands and features</p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="command-groups">
+
+        <div class="command-card">
+
+          <div class="command-card-top">
+
+            <img
+              class="command-card-logo"
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+
+            <h3>🛡️ Moderation</h3>
+
+          </div>
+
+          <div class="command-list">
+            <span class="command">/ban</span>
+            <span class="command">/kick</span>
+            <span class="command">/timeout</span>
+            <span class="command">/warn</span>
+            <span class="command">/clear</span>
+            <span class="command">/lockdown</span>
+            <span class="command">/slowmode</span>
+          </div>
+
+        </div>
+
+
+        <div class="command-card">
+
+          <div class="command-card-top">
+
+            <img
+              class="command-card-logo"
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+
+            <h3>⚙️ Server & Setup</h3>
+
+          </div>
+
+          <div class="command-list">
+            <span class="command">/change</span>
+            <span class="command">/ticket</span>
+            <span class="command">/welcome</span>
+            <span class="command">/autorole</span>
+            <span class="command">/sendmessage</span>
+          </div>
+
+        </div>
+
+
+        <div class="command-card">
+
+          <div class="command-card-top">
+
+            <img
+              class="command-card-logo"
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+
+            <h3>💰 Economy</h3>
+
+          </div>
+
+          <div class="command-list">
+            <span class="command">/economy balance</span>
+            <span class="command">/economy daily</span>
+            <span class="command">/economy pay</span>
+          </div>
+
+        </div>
+
+
+        <div class="command-card">
+
+          <div class="command-card-top">
+
+            <img
+              class="command-card-logo"
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+
+            <h3>👥 Community</h3>
+
+          </div>
+
+          <div class="command-list">
+            <span class="command">/giveaway</span>
+            <span class="command">/poll</span>
+            <span class="command">/rep</span>
+            <span class="command">/rank</span>
+            <span class="command">/leaderboard</span>
+            <span class="command">/afk</span>
+          </div>
+
+        </div>
+
+
+        <div class="command-card">
+
+          <div class="command-card-top">
+
+            <img
+              class="command-card-logo"
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+
+            <h3>ℹ️ Information</h3>
+
+          </div>
+
+          <div class="command-list">
+            <span class="command">/serverinfo</span>
+            <span class="command">/userinfo</span>
+            <span class="command">/bot</span>
+            <span class="command">/help</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         STATUS
+    ================================================== -->
+
+    <section
+      class="page"
+      id="page-status"
+    >
+
+      <div class="section-head">
+
+        <div class="botrix-identity">
+
+          <img
+            class="botrix-logo-small"
+            src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+            alt="Botrix"
+          >
+
+          <div class="botrix-identity-text">
+            <h3>Botrix System</h3>
+            <p>Live system status</p>
+          </div>
+
+        </div>
+
+        <button
+          class="btn"
+          id="refreshStatus"
+        >
+          ↻ Refresh
+        </button>
+
+      </div>
+
+
+      <div class="status-card">
+
+        <div class="status-brand">
+
+          <img
+            src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+            alt="Botrix"
+          >
+
+          <div>
+            <strong>Botrix System</strong>
+            <small>Discord Bot Infrastructure</small>
+          </div>
+
+        </div>
+
+        <div class="status-main">
+
+          <div class="status-circle">
+            <span class="dot"></span>
+          </div>
+
+          <div>
+
+            <div
+              class="status-title"
+              id="statusTitle"
+            >
+              Bot Online
+            </div>
+
+            <div
+              class="status-desc"
+              id="statusDescription"
+            >
+              Botrix is connected to Discord.
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="status-grid">
+
+          <div class="status-item">
+            <span>Status</span>
+            <strong id="statusOnline">
+              Online
+            </strong>
+          </div>
+
+          <div class="status-item">
+            <span>Verification</span>
+            <strong>
+              Verified
+            </strong>
+          </div>
+
+          <div class="status-item">
+            <span>Servers</span>
+            <strong id="statusServers">
+              0
+            </strong>
+          </div>
+
+          <div class="status-item">
+            <span>Members</span>
+            <strong id="statusMembers">
+              0
+            </strong>
+          </div>
+
+        </div>
+
+
+        <div
+          style="
+            margin-top:14px;
+            color:#777783;
+            font-size:11px;
+          "
+        >
+          Last update:
+          <span id="statusUpdated">
+            Loading...
+          </span>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         BOT UPDATES
+    ================================================== -->
+
+    <section
+      class="page"
+      id="page-updates"
+    >
+
+      <div class="section-head">
+
+        <div class="botrix-identity">
+
+          <img
+            class="botrix-logo-small"
+            src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+            alt="Botrix"
+          >
+
+          <div class="botrix-identity-text">
+            <h3>Botrix System</h3>
+            <p>Latest features and improvements</p>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="updates">
+
+        <div class="update-card">
+
+          <div class="update-icon">
+            <img
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+          </div>
+
+          <div>
+
+            <h3>Voice</h3>
+
+            <p>
+              Botrix now includes voice commands:
+              <strong>/joinvc</strong> and
+              <strong>/leavevc</strong>.
+            </p>
+
+            <div class="update-date">
+              New Feature
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="update-card">
+
+          <div class="update-icon">
+            <img
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+          </div>
+
+          <div>
+
+            <h3>Welcome</h3>
+
+            <p>
+              Configure a welcome channel with
+              <strong>/welcome channel</strong>
+              and customize your welcome message.
+            </p>
+
+            <div class="update-date">
+              New Feature
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="update-card">
+
+          <div class="update-icon">
+            <img
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+          </div>
+
+          <div>
+
+            <h3>Server Profile</h3>
+
+            <p>
+              Change the Botrix photo, name and
+              background used for your server.
+            </p>
+
+            <div class="update-date">
+              Server Customization
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="update-card">
+
+          <div class="update-icon">
+            <img
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+          </div>
+
+          <div>
+
+            <h3>Help</h3>
+
+            <p>
+              The <strong>/help</strong> command now
+              displays a new framed command panel.
+              You can also invite Botrix to another server.
+            </p>
+
+            <div class="update-date">
+              Improved Help System
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="update-card">
+
+          <div class="update-icon">
+            <img
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+          </div>
+
+          <div>
+
+            <h3>Live Status</h3>
+
+            <p>
+              The dashboard now displays online status,
+              server count, member count and the last update.
+            </p>
+
+            <div class="update-date">
+              Dashboard
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         GIVEAWAYS
+    ================================================== -->
+
+    <section
+      class="page"
+      id="page-giveaways"
+    >
+
+      <div class="section-head">
+
+        <div class="botrix-identity">
+
+          <img
+            class="botrix-logo-small"
+            src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+            alt="Botrix"
+          >
+
+          <div class="botrix-identity-text">
+            <h3>Botrix Giveaways</h3>
+            <p>Giveaway history</p>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="giveaway-stats">
+
+        <div class="giveaway-stat">
+
+          <div class="giveaway-stat-brand">
+
+            <img
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+
+            <span>Active</span>
+
+          </div>
+
+          <strong>
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="giveaway-stat">
+
+          <div class="giveaway-stat-brand">
+
+            <img
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+
+            <span>Ended</span>
+
+          </div>
+
+          <strong>
+            3
+          </strong>
+
+        </div>
+
+
+        <div class="giveaway-stat">
+
+          <div class="giveaway-stat-brand">
+
+            <img
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+
+            <span>Total Entrants</span>
+
+          </div>
+
+          <strong>
+            17
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="empty"
+        style="margin-bottom:14px"
+      >
+        🎁 No active giveaways right now.
+      </div>
+
+
+      <div class="section-head">
+        <div>
+          <h2>Ended Giveaways</h2>
+        </div>
+      </div>
+
+
+      <div class="giveaway-list">
+
+        <div class="giveaway">
+
+          <div class="giveaway-head">
+
+            <div class="giveaway-title">
+              1 Month of Free Botrix Premium using
+              your own custom bot token!
+            </div>
+
+            <span class="badge">
+              Ended
+            </span>
+
+          </div>
+
+          <div class="giveaway-meta">
+            <span>🏆 2 winners</span>
+            <span>👥 2 entrants</span>
+            <span>📅 Aug 16, 2026</span>
+          </div>
+
+        </div>
+
+
+        <div class="giveaway">
+
+          <div class="giveaway-head">
+
+            <div class="giveaway-title">
+              2 Months of Free Botrix Premium using
+              your own custom bot token!
+            </div>
+
+            <span class="badge">
+              Ended
+            </span>
+
+          </div>
+
+          <div class="giveaway-meta">
+            <span>🏆 1 winner</span>
+            <span>👥 2 entrants</span>
+            <span>📅 Jul 27, 2026</span>
+          </div>
+
+        </div>
+
+
+        <div class="giveaway">
+
+          <div class="giveaway-head">
+
+            <div class="giveaway-title">
+              Botrix Premium Giveaway
+            </div>
+
+            <span class="badge">
+              Ended
+            </span>
+
+          </div>
+
+          <div class="giveaway-meta">
+            <span>🏆 1 winner</span>
+            <span>👥 13 entrants</span>
+            <span>📅 Jul 4, 2026</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         PREMIUM
+    ================================================== -->
+
+    <section
+      class="page"
+      id="page-premium"
+    >
+
+      <div class="premium-hero">
+
+        <img
+          class="premium-logo"
+          src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+          alt="Botrix"
+        >
+
+        <h1>
+          Botrix Premium
+        </h1>
+
+        <p>
+          Unlock premium features, built-in AI,
+          uptime monitoring, image generation and
+          premium commands.
+        </p>
+
+      </div>
+
+
+      <div class="plans">
+
+        <div class="plan">
+
+          <img
+            class="plan-logo"
+            src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+            alt="Botrix"
+          >
+
+          <div class="plan-name">
+            Basic
+          </div>
+
+          <div class="plan-price">
+            500
+            <small>credits / 30d</small>
+          </div>
+
+          <div class="plan-desc">
+            Essential premium features.
+          </div>
+
+          <ul class="feature-list">
+            <li>Premium commands</li>
+            <li>Built-in AI</li>
+            <li>Uptime monitor</li>
+            <li>Premium server access</li>
+          </ul>
+
+          <button class="btn" style="width:100%">
+            Select Basic
+          </button>
+
+        </div>
+
+
+        <div class="plan featured">
+
+          <div class="plan-tag">
+            POPULAR
+          </div>
+
+          <img
+            class="plan-logo"
+            src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+            alt="Botrix"
+          >
+
+          <div class="plan-name">
+            Advanced
+          </div>
+
+          <div class="plan-price">
+            1,000
+            <small>credits / 30d</small>
+          </div>
+
+          <div class="plan-desc">
+            More premium features for your servers.
+          </div>
+
+          <ul class="feature-list">
+            <li>Every premium feature</li>
+            <li>Built-in AI</li>
+            <li>Uptime monitor</li>
+            <li>Image generation</li>
+            <li>Premium commands</li>
+          </ul>
+
+          <button
+            class="btn btn-primary"
+            style="width:100%"
+          >
+            Select Advanced
+          </button>
+
+        </div>
+
+
+        <div class="plan">
+
+          <img
+            class="plan-logo"
+            src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+            alt="Botrix"
+          >
+
+          <div class="plan-name">
+            Ultra
+          </div>
+
+          <div class="plan-price">
+            2,000
+            <small>credits / 30d</small>
+          </div>
+
+          <div class="plan-desc">
+            The complete Botrix premium experience.
+          </div>
+
+          <ul class="feature-list">
+            <li>Every premium feature</li>
+            <li>Built-in AI</li>
+            <li>Image generation</li>
+            <li>Uptime monitor</li>
+            <li>Premium commands</li>
+            <li>Stacks</li>
+          </ul>
+
+          <button class="btn" style="width:100%">
+            Select Ultra
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="account-card">
+
+        <div class="account-header">
+
+          <img
+            src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+            alt="Botrix"
+          >
+
+          <div>
+            <h3>
+              Premium Account
+            </h3>
+
+            <p
+              style="
+                color:var(--muted);
+                font-size:12px;
+                margin-top:4px;
+              "
+            >
+              Your current Botrix Premium status.
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="account-grid">
+
+          <div class="account-stat">
+
+            <span>Status</span>
+
+            <strong>
+              Inactive
+            </strong>
+
+          </div>
+
+
+          <div class="account-stat">
+
+            <span>Active Plan</span>
+
+            <strong>
+              No active plan
+            </strong>
+
+          </div>
+
+
+          <div class="account-stat">
+
+            <span>Premium Servers</span>
+
+            <strong>
+              3
+            </strong>
+
+          </div>
+
+
+          <div class="account-stat">
+
+            <span>Credits</span>
+
+            <strong>
+              0
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="account-card">
+
+        <div class="account-header">
+
+          <img
+            src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+            alt="Botrix"
+          >
+
+          <h3>
+            Premium Perks
+          </h3>
+
+        </div>
+
+        <div
+          class="quick-grid"
+          style="margin-top:15px"
+        >
+
+          <div class="quick-card">
+            <div class="quick-icon">
+              <img
+                src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+                alt="Botrix"
+              >
+            </div>
+
+            <h3>Built-in AI</h3>
+
+            <p>
+              AI-powered features for your Discord server.
+            </p>
+
+          </div>
+
+          <div class="quick-card">
+            <div class="quick-icon">
+              <img
+                src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+                alt="Botrix"
+              >
+            </div>
+
+            <h3>Uptime Monitor</h3>
+
+            <p>
+              Keep track of your Botrix availability.
+            </p>
+
+          </div>
+
+          <div class="quick-card">
+            <div class="quick-icon">
+              <img
+                src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+                alt="Botrix"
+              >
+            </div>
+
+            <h3>Image Generation</h3>
+
+            <p>
+              Premium image generation capabilities.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="account-card">
+
+        <div class="account-header">
+
+          <img
+            src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+            alt="Botrix"
+          >
+
+          <h3>
+            Top Up Credits
+          </h3>
+
+        </div>
+
+        <p
+          style="
+            color:var(--muted);
+            font-size:12px;
+            line-height:1.6;
+            margin-top:7px;
+          "
+        >
+          Get more credits by voting on Top.gg,
+          boosting the support server or using
+          available credit packs.
+        </p>
+
+        <div
+          class="hero-buttons"
+          style="margin-top:15px"
+        >
+
+          <button
+            class="btn btn-primary"
+            onclick="showToast('Top.gg voting will be available soon.')"
+          >
+            Vote on Top.gg
+          </button>
+
+          <button
+            class="btn"
+            id="premiumSupportBtn"
+          >
+            Boost Support Server
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         DOCS
+    ================================================== -->
+
+    <section
+      class="page"
+      id="page-docs"
+    >
+
+      <div class="docs-layout">
+
+        <aside class="docs-sidebar">
+
+          <div class="docs-brand">
+
+            <img
+              src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+              alt="Botrix"
+            >
+
+            <div>
+              <strong>Botrix System</strong>
+              <span>Documentation</span>
+            </div>
+
+          </div>
+
+          <input
+            type="text"
+            class="docs-search"
+            id="docsSearch"
+            placeholder="Search docs..."
+          >
+
+          <div class="docs-nav-title">
+            GETTING STARTED
+          </div>
+
+          <button
+            class="docs-nav-btn active"
+            data-doc="home"
+          >
+            Docs Home
+          </button>
+
+          <button
+            class="docs-nav-btn"
+            data-doc="quickstart"
+          >
+            Quick Start
+          </button>
+
+          <div class="docs-nav-title">
+            FEATURES
+          </div>
+
+          <button
+            class="docs-nav-btn"
+            data-doc="commands"
+          >
+            Commands
+          </button>
+
+          <button
+            class="docs-nav-btn"
+            data-doc="moderation"
+          >
+            Moderation
+          </button>
+
+          <button
+            class="docs-nav-btn"
+            data-doc="welcome"
+          >
+            Welcome System
+          </button>
+
+          <button
+            class="docs-nav-btn"
+            data-doc="tickets"
+          >
+            Tickets
+          </button>
+
+          <button
+            class="docs-nav-btn"
+            data-doc="giveaway"
+          >
+            Giveaways
+          </button>
+
+          <div class="docs-nav-title">
+            PREMIUM
+          </div>
+
+          <button
+            class="docs-nav-btn"
+            data-doc="ai"
+          >
+            AI & Premium
+          </button>
+
+          <button
+            class="docs-nav-btn"
+            data-doc="premium"
+          >
+            Premium
+          </button>
+
+          <div class="docs-nav-title">
+            SUPPORT
+          </div>
+
+          <button
+            class="docs-nav-btn"
+            data-doc="support"
+          >
+            Support
+          </button>
+
+        </aside>
+
+
+        <div class="docs-content">
+
+          <div
+            class="docs-home"
+            id="docsHome"
+          >
+
+            <div class="docs-home-brand">
+
+              <img
+                src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+                alt="Botrix"
+              >
+
+              <div>
+                <strong>Botrix System</strong>
+                <p>Official documentation</p>
+              </div>
+
+            </div>
+
+            <h1>
+              Botrix Documentation
+            </h1>
+
+            <p>
+              Everything you need to get started with
+              Botrix System, configure your Discord
+              server and use the available commands.
+            </p>
+
+
+            <div class="docs-cards">
+
+              <div
+                class="docs-card"
+                data-doc-card="quickstart"
+              >
+
+                <img
+                  class="docs-card-logo"
+                  src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+                  alt="Botrix"
+                >
+
+                <h3>
+                  Quick Start
+                </h3>
+
+                <p>
+                  Add Botrix to your server and start
+                  using the bot in a few steps.
+                </p>
+
+              </div>
+
+
+              <div
+                class="docs-card"
+                data-doc-card="commands"
+              >
+
+                <img
+                  class="docs-card-logo"
+                  src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+                  alt="Botrix"
+                >
+
+                <h3>
+                  Commands
+                </h3>
+
+                <p>
+                  Explore Botrix moderation, economy,
+                  community and information commands.
+                </p>
+
+              </div>
+
+
+              <div
+                class="docs-card"
+                data-doc-card="moderation"
+              >
+
+                <img
+                  class="docs-card-logo"
+                  src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+                  alt="Botrix"
+                >
+
+                <h3>
+                  Moderation
+                </h3>
+
+                <p>
+                  Manage your server using Botrix
+                  moderation tools.
+                </p>
+
+              </div>
+
+
+              <div
+                class="docs-card"
+                data-doc-card="ai"
+              >
+
+                <img
+                  class="docs-card-logo"
+                  src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+                  alt="Botrix"
+                >
+
+                <h3>
+                  AI & Premium
+                </h3>
+
+                <p>
+                  Learn about Botrix AI and premium
+                  capabilities.
+                </p>
+
+              </div>
+
+
+              <div
+                class="docs-card"
+                data-doc-card="tickets"
+              >
+
+                <img
+                  class="docs-card-logo"
+                  src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+                  alt="Botrix"
+                >
+
+                <h3>
+                  Tickets
+                </h3>
+
+                <p>
+                  Configure support tickets for your
+                  Discord community.
+                </p>
+
+              </div>
+
+
+              <div
+                class="docs-card"
+                data-doc-card="support"
+              >
+
+                <img
+                  class="docs-card-logo"
+                  src="https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&"
+                  alt="Botrix"
+                >
+
+                <h3>
+                  Support
+                </h3>
+
+                <p>
+                  Need help? Open a ticket with the
+                  Botrix support team.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <article
+            class="article"
+            id="docsArticle"
+            style="display:none"
+          ></article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<div
+  class="toast"
+  id="toast"
+></div>
+
+
+<script>
+/* ==================================================
+   CONFIG
+================================================== */
+
+const BOT_LOGO =
+  'https://cdn.discordapp.com/attachments/1551262760698912819/1551293445992218714/18.09.2026_14.42.46_REC.png?ex=6ab1721b&is=6ab0209b&hm=4057c25464633dba6b25b2d460cedaf46d5141993dca8236463c9d0a0db6fb92&';
+
+const SUPPORT_INVITE =
+  'https://discord.gg/fVDJrknnE';
+
+const JOIN_SERVER =
+  'https://discord.gg/fVDJrknnE';
+
+
+/* ==================================================
+   ELEMENTS
+================================================== */
+
+const navButtons =
+  document.querySelectorAll('.nav-btn[data-page]');
+
+const pages =
+  document.querySelectorAll('.page');
+
+const pageTitle =
+  document.getElementById('pageTitle');
+
+const pageSubtitle =
+  document.getElementById('pageSubtitle');
+
+const topLoginBtn =
+  document.getElementById('topLoginBtn');
+
+const loginBtn =
+  document.getElementById('loginBtn');
+
+const userBox =
+  document.getElementById('userBox');
+
+const userAvatar =
+  document.getElementById('userAvatar');
+
+const userName =
+  document.getElementById('userName');
+
+const logoutBtn =
+  document.getElementById('logoutBtn');
+
+
+/* ==================================================
+   PAGE DATA
+================================================== */
+
+const pageInfo = {
+
+  home: {
+    title: 'Home',
+    subtitle: 'Welcome to Botrix System'
+  },
+
+  servers: {
+    title: 'Servers',
+    subtitle: 'Manage and view your Botrix servers'
+  },
+
+  'bot-info': {
+    title: 'Bot Info',
+    subtitle: 'Botrix commands and features'
+  },
+
+  status: {
+    title: 'Status',
+    subtitle: 'Live Botrix system status'
+  },
+
+  updates: {
+    title: 'Bot Updates',
+    subtitle: 'Latest Botrix features and improvements'
+  },
+
+  giveaways: {
+    title: 'Giveaways',
+    subtitle: 'Botrix giveaway history'
+  },
+
+  premium: {
+    title: 'Premium',
+    subtitle: 'Unlock more Botrix features'
+  },
+
+  docs: {
+    title: 'Docs',
+    subtitle: 'Botrix documentation'
+  }
+
+};
+
+
+/* ==================================================
+   TOAST
+================================================== */
+
+let toastTimer;
+
+function showToast(message) {
+
+  const toast =
+    document.getElementById('toast');
+
+  toast.textContent =
+    message;
+
+  toast.classList.add('show');
+
+  clearTimeout(toastTimer);
+
+  toastTimer =
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+}
+
+
+/* ==================================================
+   OPEN TICKET
+================================================== */
+
+function openTicket() {
+
+  window.open(
+    SUPPORT_INVITE,
+    '_blank',
+    'noopener,noreferrer'
+  );
+
+}
+
+
+/* ==================================================
+   NAVIGATION
+================================================== */
+
+function openPage(page) {
+
+  if (!pageInfo[page]) {
+    return;
+  }
+
+  pages.forEach(section => {
+    section.classList.remove('active');
+  });
+
+  const target =
+    document.getElementById(
+      `page-${page}`
+    );
+
+  if (target) {
+    target.classList.add('active');
+  }
+
+  navButtons.forEach(button => {
+
+    button.classList.toggle(
+      'active',
+      button.dataset.page === page
+    );
+
+  });
+
+  pageTitle.textContent =
+    pageInfo[page].title;
+
+  pageSubtitle.textContent =
+    pageInfo[page].subtitle;
+
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+
+  if (page === 'servers') {
+    loadServers();
+  }
+
+  if (page === 'status') {
+    loadDashboard();
+  }
+
+}
+
+
+/* ==================================================
+   NAV BUTTONS
+================================================== */
+
+navButtons.forEach(button => {
+
+  button.addEventListener(
+    'click',
+    () => {
+      openPage(
+        button.dataset.page
+      );
+    }
+  );
+
+});
+
+
+/* ==================================================
+   TICKET BUTTON
+================================================== */
+
+document
+  .getElementById('ticketBtn')
+  .addEventListener(
+    'click',
+    openTicket
+  );
+
+
+/* ==================================================
+   SUPPORT
+================================================== */
+
+document
+  .getElementById('premiumSupportBtn')
+  .addEventListener(
+    'click',
+    openTicket
+  );
+
+
+/* ==================================================
+   LOGIN
+================================================== */
+
+function loginDiscord() {
+
+  window.location.href =
+    '/auth/discord';
+
+}
+
+loginBtn.addEventListener(
+  'click',
+  loginDiscord
+);
+
+topLoginBtn.addEventListener(
+  'click',
+  loginDiscord
+);
+
+
+/* ==================================================
+   JOIN SERVER
+================================================== */
+
+document
+  .getElementById('joinBtn')
+  .addEventListener(
+    'click',
+    () => {
+
+      window.open(
+        JOIN_SERVER,
+        '_blank',
+        'noopener,noreferrer'
+      );
+
+    }
+  );
+
+
+/* ==================================================
+   INVITE BOT
+================================================== */
+
+document
+  .getElementById('inviteBtn')
+  .addEventListener(
+    'click',
+    async () => {
+
+      try {
+
+        const response =
+          await fetch(
+            '/api/invite'
+          );
+
+        const data =
+          await response.json();
+
+        if (!response.ok || !data.url) {
+          throw new Error(
+            data.error ||
+            'Invite unavailable'
+          );
+        }
+
+        window.open(
+          data.url,
+          '_blank',
+          'noopener,noreferrer'
+        );
+
+      } catch (error) {
+
+        console.error(error);
+
+        showToast(
+          'Unable to create the bot invite.'
+        );
+
+      }
+
+    }
+  );
+
+
+/* ==================================================
+   LOGOUT
+================================================== */
+
+logoutBtn.addEventListener(
+  'click',
+  async () => {
+
+    try {
+
+      await fetch(
+        '/auth/logout',
+        {
+          method: 'POST'
+        }
+      );
+
+      location.reload();
+
+    } catch {
+      location.reload();
+    }
+
+  }
+);
+
+
+/* ==================================================
+   FORMAT NUMBER
+================================================== */
+
+function formatNumber(value) {
+
+  return Number(
+    value || 0
+  ).toLocaleString();
+
+}
+
+
+/* ==================================================
+   FORMAT DATE
+================================================== */
+
+function formatDate(value) {
+
+  if (!value) {
+    return 'Unknown';
+  }
+
+  try {
+
+    return new Date(value)
+      .toLocaleString();
+
+  } catch {
+
+    return value;
+
+  }
+
+}
+
+
+/* ==================================================
+   DASHBOARD
+================================================== */
+
+let lastDashboard = null;
+
+async function loadDashboard() {
+
+  try {
+
+    const response =
+      await fetch(
+        '/api/dashboard',
+        {
+          cache: 'no-store'
+        }
+      );
+
+    if (!response.ok) {
+      throw new Error(
+        'Dashboard request failed'
+      );
+    }
+
+    const data =
+      await response.json();
+
+    lastDashboard =
+      data;
+
+
+    /* HOME */
+
+    document.getElementById(
+      'homeServers'
+    ).textContent =
+      formatNumber(
+        data.totals?.servers
+      );
+
+    document.getElementById(
+      'homeMembers'
+    ).textContent =
+      formatNumber(
+        data.totals?.members
+      );
+
+    document.getElementById(
+      'homeMessages'
+    ).textContent =
+      formatNumber(
+        data.totals?.messages
+      );
+
+    document.getElementById(
+      'homeCommands'
+    ).textContent =
+      formatNumber(
+        data.totals?.commands
+      );
+
+
+    /* STATUS */
+
+    const online =
+      Boolean(
+        data.bot?.online
+      );
+
+    document.getElementById(
+      'statusTitle'
+    ).textContent =
+      online
+        ? 'Bot Online'
+        : 'Bot Offline';
+
+    document.getElementById(
+      'statusDescription'
+    ).textContent =
+      online
+        ? 'Botrix is connected to Discord.'
+        : 'Botrix is currently offline.';
+
+    document.getElementById(
+      'statusOnline'
+    ).textContent =
+      online
+        ? 'Online'
+        : 'Offline';
+
+    document.getElementById(
+      'statusServers'
+    ).textContent =
+      formatNumber(
+        data.totals?.servers
+      );
+
+    document.getElementById(
+      'statusMembers'
+    ).textContent =
+      formatNumber(
+        data.totals?.members
+      );
+
+    document.getElementById(
+      'statusUpdated'
+    ).textContent =
+      formatDate(
+        data.updatedAt
+      );
+
+
+    /* SIDEBAR */
+
+    document.getElementById(
+      'sidebarStatus'
+    ).textContent =
+      online
+        ? 'Bot Online'
+        : 'Bot Offline';
+
+  } catch (error) {
+
+    console.error(
+      'Dashboard error:',
+      error
+    );
+
+    document.getElementById(
+      'sidebarStatus'
+    ).textContent =
+      'Status unavailable';
+
+  }
+
+}
+
+
+/* ==================================================
+   SERVERS
+================================================== */
+
+async function loadServers() {
+
+  const container =
+    document.getElementById(
+      'serversContainer'
+    );
+
+  container.innerHTML = `
+    <div class="loading">
+
+      <img
+        class="loading-logo"
+        src="${BOT_LOGO}"
+        alt="Botrix"
+      >
+
+      <div class="spinner"></div>
+
+      Loading servers...
+
+    </div>
+  `;
+
+  try {
+
+    const response =
+      await fetch(
+        '/api/dashboard',
+        {
+          cache: 'no-store'
+        }
+      );
+
+    const data =
+      await response.json();
+
+    const guilds =
+      Array.isArray(data.guilds)
+        ? data.guilds
+        : [];
+
+
+    document.getElementById(
+      'serverTotal'
+    ).textContent =
+      formatNumber(
+        guilds.length
+      );
+
+
+    document.getElementById(
+      'serverMembers'
+    ).textContent =
+      formatNumber(
+        guilds.reduce(
+          (total, guild) =>
+            total +
+            Number(
+              guild.members || 0
+            ),
+          0
+        )
+      );
+
+
+    if (!guilds.length) {
+
+      container.innerHTML = `
+
+        <div class="empty">
+
+          <img
+            src="${BOT_LOGO}"
+            style="
+              width:60px;
+              height:60px;
+              border-radius:17px;
+              object-fit:cover;
+              margin-bottom:12px;
+              box-shadow:0 12px 35px rgba(124,92,255,.25);
+            "
+            alt="Botrix"
+          >
+
+          <div>
+            Botrix is not currently in any servers.
+          </div>
+
+        </div>
+
+      `;
+
+      return;
+    }
+
+
+    guilds.sort(
+      (a, b) =>
+        Number(b.members || 0) -
+        Number(a.members || 0)
+    );
+
+
+    container.innerHTML =
+      guilds.map(
+        (guild, index) => {
+
+          const icon =
+            guild.icon
+              ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=128`
+              : null;
+
+          return `
+
+            <div class="server-card">
+
+              <div class="server-card-brand">
+
+                <img
+                  src="${BOT_LOGO}"
+                  alt="Botrix"
+                >
+
+              </div>
+
+              <div class="server-top">
+
+                ${
+                  icon
+                    ? `
+                      <img
+                        class="server-icon"
+                        src="${icon}"
+                        alt=""
+                      >
+                    `
+                    : `
+                      <div class="server-icon">
+                        ${escapeHtml(
+                          guild.name
+                            ?.charAt(0)
+                            ?.toUpperCase() || 'S'
+                        )}
+                      </div>
+                    `
+                }
+
+                <div style="min-width:0">
+
+                  <div class="server-name">
+                    ${escapeHtml(
+                      guild.name ||
+                      'Unknown Server'
+                    )}
+                  </div>
+
+                  <div class="server-members">
+                    ${formatNumber(
+                      guild.members
+                    )} members
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="server-actions">
+
+                <span class="rank">
+                  TOP ${index + 1}
+                </span>
+
+                <button
+                  class="btn"
+                  onclick="showToast('Server management is coming soon.')"
+                >
+                  Manage
+                </button>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }
+      ).join('');
+
+  } catch (error) {
+
+    console.error(
+      'Servers error:',
+      error
+    );
+
+    container.innerHTML = `
+
+      <div class="empty">
+
+        <img
+          src="${BOT_LOGO}"
+          style="
+            width:60px;
+            height:60px;
+            border-radius:17px;
+            object-fit:cover;
+            margin-bottom:12px;
+          "
+          alt="Botrix"
+        >
+
+        <div>
+          Unable to load servers.
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* ==================================================
+   ESCAPE HTML
+================================================== */
+
+function escapeHtml(value) {
+
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+
+}
+
+
+/* ==================================================
+   CURRENT USER
+================================================== */
+
+async function loadUser() {
+
+  try {
+
+    const response =
+      await fetch(
+        '/api/me',
+        {
+          cache: 'no-store'
+        }
+      );
+
+    const data =
+      await response.json();
+
+
+    if (
+      data.loggedIn &&
+      data.user
+    ) {
+
+      userBox.classList.add(
+        'show'
+      );
+
+      topLoginBtn.style.display =
+        'none';
+
+      userName.textContent =
+        data.user.globalName ||
+        data.user.username ||
+        'Discord User';
+
+      userAvatar.src =
+        data.user.avatar ||
+        'https://cdn.discordapp.com/embed/avatars/0.png';
+
+    } else {
+
+      userBox.classList.remove(
+        'show'
+      );
+
+      topLoginBtn.style.display =
+        '';
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      'User error:',
+      error
+    );
+
+  }
+
+}
+
+
+/* ==================================================
+   DOCS DATA
+================================================== */
+
+const docsData = {
+
+  quickstart: {
+    title: 'Quick Start',
+
+    html: `
+      <h1>Quick Start</h1>
+
+      <p>
+        Get Botrix running on your Discord server
+        in just a few steps.
+      </p>
+
+      <h2>1. Add Botrix</h2>
+
+      <p>
+        Click <strong>Add Bot to Server</strong>
+        from the Home page and choose the Discord
+        server where you want Botrix installed.
+      </p>
+
+      <h2>2. Give Permissions</h2>
+
+      <p>
+        Botrix needs the required Discord permissions
+        to perform its moderation and community
+        functions.
+      </p>
+
+      <h2>3. Use Commands</h2>
+
+      <p>
+        Once Botrix is installed, use slash commands
+        such as:
+      </p>
+
+      <div class="code">
+/help
+/ban
+/welcome
+/giveaway
+/serverinfo
+      </div>
+
+      <h2>4. Configure Your Server</h2>
+
+      <p>
+        Use the available setup commands to customize
+        Botrix for your community.
+      </p>
+    `
+  },
+
+
+  commands: {
+    title: 'Commands',
+
+    html: `
+      <h1>Commands</h1>
+
+      <p>
+        Botrix provides commands for moderation,
+        server configuration, economy, community
+        features and information.
+      </p>
+
+      <h2>Moderation</h2>
+
+      <div class="code">
+/ban
+/kick
+/timeout
+/warn
+/clear
+/lockdown
+/slowmode
+      </div>
+
+      <h2>Server & Setup</h2>
+
+      <div class="code">
+/change
+/ticket
+/welcome
+/autorole
+/sendmessage
+      </div>
+
+      <h2>Economy</h2>
+
+      <div class="code">
+/economy balance
+/economy daily
+/economy pay
+      </div>
+
+      <h2>Community</h2>
+
+      <div class="code">
+/giveaway
+/poll
+/rep
+/rank
+/leaderboard
+/afk
+      </div>
+
+      <h2>Information</h2>
+
+      <div class="code">
+/serverinfo
+/userinfo
+/bot
+/help
+      </div>
+    `
+  },
+
+
+  moderation: {
+    title: 'Moderation',
+
+    html: `
+      <h1>Moderation</h1>
+
+      <p>
+        Botrix includes tools to help server
+        administrators manage their communities.
+      </p>
+
+      <h2>Available Commands</h2>
+
+      <ul>
+        <li><strong>/ban</strong> — Ban a member.</li>
+        <li><strong>/kick</strong> — Kick a member.</li>
+        <li><strong>/timeout</strong> — Timeout a member.</li>
+        <li><strong>/warn</strong> — Warn a member.</li>
+        <li><strong>/clear</strong> — Clear messages.</li>
+        <li><strong>/lockdown</strong> — Lock down a channel/server.</li>
+        <li><strong>/slowmode</strong> — Configure slowmode.</li>
+      </ul>
+
+      <h2>Permissions</h2>
+
+      <p>
+        Discord permissions are required for moderation
+        actions. Make sure Botrix has the permissions
+        needed for the selected command.
+      </p>
+    `
+  },
+
+
+  welcome: {
+    title: 'Welcome System',
+
+    html: `
+      <h1>Welcome System</h1>
+
+      <p>
+        Botrix can automatically welcome new members
+        in your selected Discord channel.
+      </p>
+
+      <h2>Configure the Channel</h2>
+
+      <div class="code">
+/welcome channel
+      </div>
+
+      <p>
+        Choose the channel where Botrix should send
+        welcome messages.
+      </p>
+
+      <h2>Welcome Message</h2>
+
+      <p>
+        You can customize the text used when a new
+        member joins your server.
+      </p>
+    `
+  },
+
+
+  tickets: {
+    title: 'Tickets',
+
+    html: `
+      <h1>Tickets</h1>
+
+      <p>
+        Botrix provides a ticket system for handling
+        support requests inside your Discord server.
+      </p>
+
+      <h2>Create a Ticket System</h2>
+
+      <div class="code">
+/ticket
+      </div>
+
+      <p>
+        Configure your support workflow and allow
+        members to contact your staff privately.
+      </p>
+
+      <h2>Support</h2>
+
+      <p>
+        If you need help with Botrix itself, use the
+        Open Ticket button in the dashboard.
+      </p>
+    `
+  },
+
+
+  giveaway: {
+    title: 'Giveaways',
+
+    html: `
+      <h1>Giveaways</h1>
+
+      <p>
+        Create community giveaways and reward your
+        Discord members.
+      </p>
+
+      <h2>Command</h2>
+
+      <div class="code">
+/giveaway
+      </div>
+
+      <p>
+        Giveaway results and participation can be
+        viewed from the Giveaways dashboard page.
+      </p>
+    `
+  },
+
+
+  ai: {
+    title: 'AI & Premium',
+
+    html: `
+      <h1>AI & Premium</h1>
+
+      <p>
+        Botrix Premium includes additional features
+        such as built-in AI and other advanced tools.
+      </p>
+
+      <h2>Built-in AI</h2>
+
+      <p>
+        Premium servers can use Botrix AI features
+        where available.
+      </p>
+
+      <h2>Premium Features</h2>
+
+      <ul>
+        <li>Built-in AI</li>
+        <li>Uptime monitoring</li>
+        <li>Image generation</li>
+        <li>Premium commands</li>
+      </ul>
+    `
+  },
+
+
+  premium: {
+    title: 'Premium',
+
+    html: `
+      <h1>Premium</h1>
+
+      <p>
+        Botrix Premium provides additional features
+        and increased functionality.
+      </p>
+
+      <h2>Plans</h2>
+
+      <ul>
+        <li>Basic — 500 credits / 30 days</li>
+        <li>Advanced — 1,000 credits / 30 days</li>
+        <li>Ultra — 2,000 credits / 30 days</li>
+      </ul>
+
+      <h2>Premium Perks</h2>
+
+      <ul>
+        <li>Built-in AI</li>
+        <li>Uptime monitor</li>
+        <li>Image generation</li>
+        <li>Premium commands</li>
+        <li>Stacks</li>
+      </ul>
+    `
+  },
+
+
+  support: {
+    title: 'Support',
+
+    html: `
+      <h1>Support</h1>
+
+      <p>
+        Need help with Botrix?
+      </p>
+
+      <h2>Open a Ticket</h2>
+
+      <p>
+        Contact the Botrix support team through
+        the official support server.
+      </p>
+
+      <button
+        class="btn btn-primary"
+        onclick="openTicket()"
+      >
+        Open Ticket
+      </button>
+    `
+  }
+
+};
+
+
+/* ==================================================
+   DOCS HOME
+================================================== */
+
+function showDocsHome() {
+
+  document.getElementById(
+    'docsHome'
+  ).style.display = '';
+
+  document.getElementById(
+    'docsArticle'
+  ).style.display = 'none';
+
+}
+
+
+/* ==================================================
+   OPEN DOC
+================================================== */
+
+function openDoc(key) {
+
+  const doc =
+    docsData[key];
+
+  if (!doc) {
+    return;
+  }
+
+  document.getElementById(
+    'docsHome'
+  ).style.display = 'none';
+
+  const article =
+    document.getElementById(
+      'docsArticle'
+    );
+
+  article.style.display = '';
+
+  article.innerHTML =
+    doc.html;
+
+  document.querySelectorAll(
+    '.docs-nav-btn'
+  ).forEach(button => {
+
+    button.classList.toggle(
+      'active',
+      button.dataset.doc === key
+    );
+
+  });
+
+  document.querySelector(
+    '#page-docs'
+  ).scrollIntoView({
+    behavior: 'smooth'
+  });
+
+}
+
+
+/* ==================================================
+   DOC NAV
+================================================== */
+
+document.querySelectorAll(
+  '.docs-nav-btn'
+).forEach(button => {
+
+  button.addEventListener(
+    'click',
+    () => {
+
+      const key =
+        button.dataset.doc;
+
+      if (key === 'home') {
+
+        document.querySelectorAll(
+          '.docs-nav-btn'
+        ).forEach(btn => {
+          btn.classList.remove(
+            'active'
+          );
+        });
+
+        button.classList.add(
+          'active'
+        );
+
+        showDocsHome();
+
+        return;
+      }
+
+      openDoc(key);
+
+    }
+  );
+
+});
+
+
+/* ==================================================
+   DOC CARDS
+================================================== */
+
+document.querySelectorAll(
+  '[data-doc-card]'
+).forEach(card => {
+
+  card.addEventListener(
+    'click',
+    () => {
+
+      openDoc(
+        card.dataset.docCard
+      );
+
+    }
+  );
+
+});
+
+
+/* ==================================================
+   DOC SEARCH
+================================================== */
+
+document
+  .getElementById('docsSearch')
+  .addEventListener(
+    'input',
+    event => {
+
+      const query =
+        event.target.value
+          .trim()
+          .toLowerCase();
+
+      document.querySelectorAll(
+        '.docs-nav-btn'
+      ).forEach(button => {
+
+        const text =
+          button.textContent
+            .toLowerCase();
+
+        button.style.display =
+          !query ||
+          text.includes(query)
+            ? ''
+            : 'none';
+
+      });
+
+    }
+  );
+
+
+/* ==================================================
+   KEYBOARD DOC SEARCH
+================================================== */
+
+document.addEventListener(
+  'keydown',
+  event => {
+
+    if (
+      (event.ctrlKey ||
+       event.metaKey) &&
+      event.key.toLowerCase() === 'k'
+    ) {
+
+      event.preventDefault();
+
+      openPage('docs');
+
+      document
+        .getElementById('docsSearch')
+        .focus();
+
+    }
+
+  }
+);
+
+
+/* ==================================================
+   REFRESH
+================================================== */
+
+document
+  .getElementById('refreshServers')
+  .addEventListener(
+    'click',
+    loadServers
+  );
+
+document
+  .getElementById('refreshStatus')
+  .addEventListener(
+    'click',
+    loadDashboard
+  );
+
+
+/* ==================================================
+   HASH SUPPORT
+================================================== */
+
+function handleHash() {
+
+  const hash =
+    location.hash
+      .replace('#', '')
+      .trim();
+
+  if (
+    hash &&
+    pageInfo[hash]
+  ) {
+    openPage(hash);
+  }
+
+}
+
+window.addEventListener(
+  'hashchange',
+  handleHash
+);
+
+
+/* ==================================================
+   INITIALIZE
+================================================== */
+
+async function initialize() {
+
+  await Promise.all([
+    loadUser(),
+    loadDashboard()
+  ]);
+
+  handleHash();
+
+  loadServers();
+
+}
+
+
+/* ==================================================
+   AUTO REFRESH
+================================================== */
+
+setInterval(
+  loadDashboard,
+  10000
+);
+
+
+/* ==================================================
+   START
+================================================== */
+
+initialize();
+
+</script>
+
+</body>
+</html>
