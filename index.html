@@ -1823,6 +1823,64 @@
       }
     }
   </style>
+
+<style id="botrix-server-cards">
+.botrix-server-card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  padding:20px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
+  box-shadow:0 12px 35px rgba(0,0,0,.18);
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.botrix-server-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(124,92,255,.55);
+  box-shadow:0 18px 45px rgba(0,0,0,.25);
+}
+.botrix-server-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.botrix-server-icon{
+  width:64px;height:64px;border-radius:18px;object-fit:cover;
+  background:rgba(255,255,255,.06);
+}
+.botrix-online{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 10px;border-radius:999px;
+  background:rgba(55,210,120,.1);color:#5ee28a;font-size:12px;font-weight:700;
+}
+.botrix-online i{
+  width:7px;height:7px;border-radius:50%;background:#48dc78;
+  box-shadow:0 0 10px rgba(72,220,120,.7);
+}
+.botrix-server-info{min-width:0}
+.botrix-server-info h3{
+  margin:0 0 8px;font-size:17px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+}
+.botrix-server-meta{
+  display:flex;flex-direction:column;gap:6px;
+  color:rgba(255,255,255,.58);font-size:12px;
+}
+.botrix-manage-server{
+  width:100%;border:0;border-radius:11px;padding:11px 14px;
+  cursor:pointer;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,#7657ff,#5b3fe4);
+  transition:filter .2s ease,transform .2s ease;
+}
+.botrix-manage-server:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.botrix-empty-servers{
+  grid-column:1/-1;text-align:center;padding:55px 20px;
+  border:1px dashed rgba(255,255,255,.12);border-radius:18px;
+}
+.botrix-empty-icon{font-size:32px;margin-bottom:10px}
+.botrix-empty-servers h3{margin:0 0 7px}
+.botrix-empty-servers p{margin:0;color:rgba(255,255,255,.55)}
+</style>
+
 </head>
 
 <body>
@@ -5066,6 +5124,87 @@ setInterval(
 
 initialize();
 </script>
+
+
+/* BOTRIX_SERVERS_DYNAMIC_START */
+async function loadBotrixServers() {
+  try {
+    const response = await fetch('/api/dashboard', { cache: 'no-store' });
+    if (!response.ok) throw new Error('API error ' + response.status);
+
+    const data = await response.json();
+    const guilds = Array.isArray(data.guilds) ? data.guilds : [];
+
+    // Try several common containers so this works with the existing dashboard
+    // without changing the rest of the page.
+    const container =
+      document.querySelector('#serversList') ||
+      document.querySelector('.servers-list') ||
+      document.querySelector('[data-servers-list]') ||
+      document.querySelector('#serversGrid') ||
+      document.querySelector('.servers-grid');
+
+    if (!container) return;
+
+    if (!guilds.length) {
+      container.innerHTML = `
+        <div class="botrix-empty-servers">
+          <div class="botrix-empty-icon">◉</div>
+          <h3>No servers found</h3>
+          <p>Botrix is not currently connected to any server.</p>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = guilds.map(guild => {
+      const icon = guild.icon
+        ? (String(guild.icon).startsWith('http')
+            ? guild.icon
+            : `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.${String(guild.icon).startsWith('a_') ? 'gif' : 'png'}?size=128`)
+        : `https://cdn.discordapp.com/embed/avatars/${Number(guild.id) % 5}.png`;
+
+      const name = String(guild.name || 'Unnamed Server')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+
+      const id = String(guild.id || '');
+      const members = Number(guild.members || guild.memberCount || 0).toLocaleString();
+
+      return `
+        <article class="botrix-server-card">
+          <div class="botrix-server-top">
+            <img class="botrix-server-icon"
+                 src="${icon}"
+                 alt="${name}"
+                 onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'">
+            <span class="botrix-online"><i></i> Bot Online</span>
+          </div>
+          <div class="botrix-server-info">
+            <h3 title="${name}">${name}</h3>
+            <div class="botrix-server-meta">
+              <span>👥 ${members} members</span>
+              <span>🆔 ${id}</span>
+            </div>
+          </div>
+          <button class="botrix-manage-server" type="button"
+                  onclick="window.location.hash='server-${id}'">
+            Manage
+          </button>
+        </article>`;
+    }).join('');
+  } catch (error) {
+    console.error('Botrix servers:', error);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadBotrixServers);
+} else {
+  loadBotrixServers();
+}
+/* BOTRIX_SERVERS_DYNAMIC_END */
 
 </body>
 </html>
